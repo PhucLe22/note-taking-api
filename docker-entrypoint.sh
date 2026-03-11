@@ -1,11 +1,13 @@
 #!/bin/bash
 set -e
 
-# Generate key if not set
-php artisan key:generate --force --no-interaction 2>/dev/null || true
+# Ensure storage directories exist and are writable
+mkdir -p /var/www/html/storage/logs
+mkdir -p /var/www/html/storage/framework/{cache,sessions,views}
+chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Cache config and routes for production
-php artisan config:cache
+# Do NOT cache config — let env vars be read at runtime
+php artisan config:clear
 php artisan route:cache
 php artisan view:cache
 

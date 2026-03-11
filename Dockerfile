@@ -33,9 +33,8 @@ COPY . .
 # Run post-install scripts
 RUN composer dump-autoload --optimize
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Set permissions — make storage and cache writable by any user
+RUN chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expose port (Render sets PORT env var)
 EXPOSE 10000
