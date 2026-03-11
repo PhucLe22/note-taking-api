@@ -11,8 +11,9 @@ php artisan config:clear
 php artisan route:cache
 php artisan view:cache
 
-# Run migrations
+# Run migrations and seed if users table is empty
 php artisan migrate --force
+php artisan db:seed --force 2>/dev/null || true
 
 # Update Apache to listen on Render's PORT (default 10000)
 sed -i "s/Listen 80/Listen ${PORT:-10000}/" /etc/apache2/ports.conf
