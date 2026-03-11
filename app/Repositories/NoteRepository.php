@@ -46,6 +46,15 @@ class NoteRepository implements NoteRepositoryInterface
             ->paginate(10);
     }
 
+    public function getTrashedNotes(int $userId): LengthAwarePaginator
+    {
+        return Note::onlyTrashed()
+            ->where('user_id', $userId)
+            ->with('tags')
+            ->latest()
+            ->paginate(10);
+    }
+
     public function search(int $userId, string $query): LengthAwarePaginator
     {
         $lowerQuery = mb_strtolower($query);
@@ -58,5 +67,11 @@ class NoteRepository implements NoteRepositoryInterface
             ->with('tags')
             ->latest()
             ->paginate(10);
+    }
+
+    public function forceDelete(Note $note): void
+    {
+        $note->tags()->detach();
+        $note->forceDelete();
     }
 }

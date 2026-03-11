@@ -40,7 +40,11 @@ class NoteController extends Controller
     )]
     public function index(Request $request): AnonymousResourceCollection
     {
-        $notes = $this->noteService->getUserNotes($request->user()->id);
+        if ($request->boolean('trashed')) {
+            $notes = $this->noteService->getTrashedNotes($request->user()->id);
+        } else {
+            $notes = $this->noteService->getUserNotes($request->user()->id);
+        }
 
         return NoteResource::collection($notes);
     }
@@ -211,6 +215,38 @@ class NoteController extends Controller
         $note = $this->noteService->restore($id, $request->user()->id);
 
         return new NoteResource($note);
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/notes/{id}/force',
+        summary: 'Permanently delete a trashed note',
+        security: [['bearerAuth' => []]],
+        tags: ['Notes'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Note permanently deleted',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
+                        new OA\Property(property: 'message', type: 'string', example: 'Note permanently deleted.'),
+                    ]
+                )
+            ),
+            new OA\Response(response: 404, description: 'Not found'),
+        ]
+    )]
+    public function forceDelete(Request $request, int $id): JsonResponse
+    {
+        $this->noteService->forceDelete($id, $request->user()->id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Note permanently deleted.',
+        ]);
     }
 
     #[OA\Get(

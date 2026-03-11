@@ -19,5 +19,9 @@ interface NoteRepositoryInterface
 
     public function getUserNotes(int $userId): LengthAwarePaginator;
 
+    public function getTrashedNotes(int $userId): LengthAwarePaginator;
+
     public function search(int $userId, string $query): LengthAwarePaginator;
+
+    public function forceDelete(Note $note): void;
 }

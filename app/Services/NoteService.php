@@ -17,6 +17,11 @@ class NoteService
         return $this->noteRepository->getUserNotes($userId);
     }
 
+    public function getTrashedNotes(int $userId): LengthAwarePaginator
+    {
+        return $this->noteRepository->getTrashedNotes($userId);
+    }
+
     public function findOrFail(int $id): Note
     {
         return $this->noteRepository->findOrFail($id);
@@ -63,5 +68,11 @@ class NoteService
     public function search(int $userId, string $query): LengthAwarePaginator
     {
         return $this->noteRepository->search($userId, $query);
+    }
+
+    public function forceDelete(int $id, int $userId): void
+    {
+        $note = $this->noteRepository->findTrashedOrFail($id, $userId);
+        $this->noteRepository->forceDelete($note);
     }
 }

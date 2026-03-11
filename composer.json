@@ -10,10 +10,12 @@
         "darkaonline/l5-swagger": "^10.1",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.3",
-        "laravel/tinker": "^2.10.1"
+        "laravel/tinker": "^2.10.1",
+        "league/flysystem-aws-s3-v3": "^3.32"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "laravel/octane": "^2.15",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
